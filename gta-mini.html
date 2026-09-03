@@ -7,7 +7,79 @@
 
 <style>
 *{box-sizing:border-box}
+/* FARM */
+.farm{
+  position:absolute;
+  left:150px;
+  top:120px;
+  width:650px;
+  height:500px;
+  background:#6b4b2a;
+  border:8px solid #3b2918;
+  border-radius:20px;
+  padding:25px;
+  box-sizing:border-box;
+}
 
+.farm-title{
+  color:white;
+  font-size:28px;
+  font-weight:bold;
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.field{
+  position:absolute;
+  background:#8b5a2b;
+  border:5px solid #4d321b;
+  border-radius:12px;
+}
+
+.field::after{
+  content:"🌱 🌱 🌱 🌱 🌱";
+  position:absolute;
+  font-size:30px;
+  letter-spacing:18px;
+  top:25px;
+  left:20px;
+}
+
+.field1{
+  width:260px;
+  height:150px;
+  left:25px;
+  top:80px;
+}
+
+.field2{
+  width:260px;
+  height:150px;
+  right:25px;
+  top:80px;
+}
+
+.field3{
+  width:550px;
+  height:150px;
+  left:25px;
+  bottom:25px;
+}
+
+.barn{
+  position:absolute;
+  right:275px;
+  bottom:185px;
+  font-size:70px;
+}
+
+.tractor{
+  position:absolute;
+  right:55px;
+  bottom:185px;
+  font-size:65px;
+}
+  
 html,body{
 margin:0;
 width:100%;
@@ -310,7 +382,18 @@ font-size:24px
 <div id="game">
 
 <div id="world">
+<!-- FARM AREA -->
+<div class="farm">
+  <div class="farm-title">🌾 FARM</div>
 
+  <div class="field field1"></div>
+  <div class="field field2"></div>
+  <div class="field field3"></div>
+
+  <div class="barn">🏠</div>
+  <div class="tractor">🚜</div>
+</div>
+  
 <!-- ROADS -->
 <div class="road h1"></div>
 <div class="road h2"></div>
