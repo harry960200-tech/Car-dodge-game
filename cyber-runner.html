@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Road Racer</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #18243d, #050711 65%);
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  margin: 20px 0 5px;
+  font-size: 32px;
+}
+
+.subtitle {
+  margin: 0 0 15px;
+  color: #9ca3af;
+}
+
+#game {
+  position: relative;
+  width: min(94vw, 420px);
+  height: 620px;
+  margin: auto;
+  overflow: hidden;
+  border: 3px solid #334155;
+  border-radius: 25px;
+  background: #20242c;
+  box-shadow: 0 0 35px #000;
+}
+
+#road {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg,
+      #11151c 0%,
+      #252a33 12%,
+      #252a33 88%,
+      #11151c 100%);
+}
+
+.lane {
+  position: absolute;
+  top: -100px;
+  width: 7px;
+  height: 80px;
+  background: #f8fafc;
+  opacity: .8;
+}
+
+#lane1 { left: 33%; }
+#lane2 { left: 66%; }
+
+#car, .enemy {
+  position: absolute;
+  width: 48px;
+  height: 82px;
+  border-radius: 13px;
+  z-index: 5;
+}
+
+#car {
+  bottom: 30px;
+  left: calc(50% - 24px);
+  background: linear-gradient(#38bdf8, #2563eb);
+  box-shadow: 0 0 20px #38bdf8;
+}
+
+#car::before,
+.enemy::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  width: 32px;
+  height: 25px;
+  border-radius: 7px;
+  background: #bfe9ff;
+}
+
+#car::after,
+.enemy::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 8px;
+  width: 38px;
+  height: 8px;
+  border-radius: 5px;
+  background: #111827;
+}
+
+.enemy {
+  background: linear-gradient(#fb7185, #dc2626);
+  box-shadow: 0 0 15px #ef4444;
+}
+
+#score {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 20;
+  padding: 9px 15px;
+  border-radius: 15px;
+  background: #0009;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+#start {
+  margin: 15px;
+  padding: 13px 30px;
+  border: 0;
+  border-radius: 30px;
+  background: #2563eb;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+#controls {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  width: 100%;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 25px;
+}
+
+.control {
+  width: 75px;
+  height: 55px;
+  border: 1px solid #ffffff44;
+  border-radius: 18px;
+  background: #0009;
+  color: white;
+  font-size: 27px;
+}
+
+#gameOver {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: #050711dd;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#gameOver h2 {
+  font-size: 40px;
+  margin: 5px;
+}
+
+#finalScore {
+  font-size: 22px;
+  margin: 10px;
+}
+
+#restart {
+  padding: 13px 28px;
+  border: 0;
+  border-radius: 25px;
+  background: #22c55e;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏎️ Neon Road Racer</h1>
+<p class="subtitle">Dodge the traffic and beat your score!</p>
+
+<button id="start">START GAME</button>
+
+<div id="game">
+
+  <div id="road"></div>
+
+  <div class="lane" id="lane1"></div>
+  <div class="lane" id="lane2"></div>
+
+  <div id="score">Score: 0</div>
+
+  <div id="car"></div>
+
+  <div id="controls">
+    <button class="control" id="left">⬅️</button>
+    <button class="control" id="right">➡️</button>
+  </div>
+
+  <div id="gameOver">
+    <h2>GAME OVER</h2>
+    <div id="finalScore">Score: 0</div>
+    <button id="restart">PLAY AGAIN</button>
+  </div>
+
+</div>
+
+<script>
+const game = document.getElementById("game");
+const car = document.getElementById("car");
+const scoreText = document.getElementById("score");
+
+let playerX = 50;
+let score = 0;
+let playing = false;
+let speed = 4;
+let spawnTimer;
+let roadTimer;
+
+function startGame() {
+  document.querySelectorAll(".enemy").forEach(e => e.remove());
+
+  playerX = 50;
+  score = 0;
+  speed = 4;
+  playing = true;
+
+  car.style.left = "calc(50% - 24px)";
+  scoreText.textContent = "Score: 0";
+
+  document.getElementById("gameOver").style.display = "none";
+
+  clearInterval(spawnTimer);
+  spawnTimer = setInterval(createEnemy, 900);
+
+  requestAnimationFrame(moveRoad);
+}
+
+function move(direction) {
+  if (!playing) return;
+
+  playerX += direction * 8;
+
+  if (playerX < 12) playerX = 12;
+  if (playerX > 88) playerX = 88;
+
+  car.style.left = "calc(" + playerX + "% - 24px)";
+}
+
+function createEnemy() {
+  if (!playing) return;
+
+  const enemy = document.createElement("div");
+  enemy.className = "enemy";
+
+  const lanes = [22, 50, 78];
+  const lane = lanes[Math.floor(Math.random() * lanes.length)];
+
+  enemy.style.left = "calc(" + lane + "% - 24px)";
+  enemy.style.top = "-90px";
+
+  game.appendChild(enemy);
+
+  let y = -90;
+
+  const fall = setInterval(() => {
+
+    if (!playing) {
+      clearInterval(fall);
+      enemy.remove();
+      return;
+    }
+
+    y += speed;
+    enemy.style.top = y + "px";
+
+    const a = car.getBoundingClientRect();
+    const b = enemy.getBoundingClientRect();
+
+    if (
+      a.left < b.right - 8 &&
+      a.right > b.left + 8 &&
+      a.top < b.bottom - 8 &&
+      a.bottom > b.top + 8
+    ) {
+      clearInterval(fall);
+      enemy.remove();
+      endGame();
+    }
+
+    if (y > 650) {
+      clearInterval(fall);
+      enemy.remove();
+
+      score++;
+      scoreText.textContent = "Score: " + score;
+
+      if (score % 10 === 0) {
+        speed += 0.7;
+      }
+    }
+
+  }, 30);
+}
+
+function moveRoad() {
+  if (!playing) return;
+
+  document.querySelectorAll(".lane").forEach(lane => {
+    let top = parseFloat(lane.style.top || "-100");
+    top += speed;
+
+    if (top > 650) top = -100;
+
+    lane.style.top = top + "px";
+  });
+
+  requestAnimationFrame(moveRoad);
+}
+
+function endGame() {
+  playing = false;
+  clearInterval(spawnTimer);
+
+  document.getElementById("finalScore").textContent =
+    "Your Score: " + score;
+
+  document.getElementById("gameOver").style.display = "flex";
+}
+
+document.getElementById("start").onclick = startGame;
+document.getElementById("restart").onclick = startGame;
+
+document.getElementById("left").onclick = () => move(-1);
+document.getElementById("right").onclick = () => move(1);
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft") move(-1);
+  if (e.key === "ArrowRight") move(1);
+});
+</script>
+
+</body>
+</html>
