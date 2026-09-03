@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>GTA Mini City</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{
+
+ margin:0;background:#111;color:white;font-family:Arial;
+
+ text-align:center;overflow:hidden
+
+}
+
+h1{margin:12px 0 4px;font-size:26px}
+
+p{margin:0 0 8px;color:#aaa}
+
+#game{
+
+ position:relative;
+
+ width:96vw;
+
+ height:78vh;
+
+ min-height:500px;
+
+ margin:auto;
+
+ overflow:hidden;
+
+ border:3px solid #333;
+
+ border-radius:15px;
+
+ background:#5d9145;
+
+ box-shadow:0 0 30px #000
+
+}
+
+/* CITY */
+
+#city{
+
+ position:absolute;
+
+ inset:0;
+
+ background:
+
+ linear-gradient(90deg,
+
+ transparent 0 14%,
+
+ #555 14% 31%,
+
+ transparent 31% 47%,
+
+ #555 47% 64%,
+
+ transparent 64% 80%,
+
+ #555 80% 88%,
+
+ transparent 88%),
+
+ linear-gradient(
+
+ #5d9145 0 22%,
+
+ #555 22% 38%,
+
+ #5d9145 38% 62%,
+
+ #555 62% 78%,
+
+ #5d9145 78%
+
+ );
+
+}
+
+/* BUILDINGS */
+
+.building{
+
+ position:absolute;
+
+ background:#777;
+
+ border:4px solid #444;
+
+ box-shadow:inset 0 0 20px #222
+
+}
+
+.b1{width:150px;height:110px;top:25px;left:30px}
+
+.b2{width:130px;height:100px;top:30px;right:35px}
+
+.b3{width:140px;height:110px;bottom:30px;left:35px}
+
+.b4{width:150px;height:100px;bottom:30px;right:30px}
+
+.window{
+
+ position:absolute;
+
+ width:18px;height:18px;
+
+ background:#ffd84d;
+
+ border:3px solid #333
+
+}
+
+/* PLAYER */
+
+#player{
+
+ position:absolute;
+
+ width:30px;height:42px;
+
+ left:50%;top:50%;
+
+ transform:translate(-50%,-50%);
+
+ background:#2196f3;
+
+ border:3px solid #fff;
+
+ border-radius:8px;
+
+ z-index:20;
+
+ box-shadow:0 0 12px #2196f3
+
+}
+
+#player:before{
+
+ content:"";
+
+ position:absolute;
+
+ width:12px;height:12px;
+
+ background:#ffe0bd;
+
+ border-radius:50%;
+
+ top:-10px;left:6px
+
+}
+
+/* CARS */
+
+.car{
+
+ position:absolute;
+
+ width:46px;height:70px;
+
+ border-radius:10px;
+
+ border:3px solid #222;
+
+ z-index:10;
+
+ box-shadow:0 4px 8px #0008
+
+}
+
+.car:before{
+
+ content:"";
+
+ position:absolute;
+
+ left:7px;top:12px;
+
+ width:26px;height:18px;
+
+ background:#9ed8e8;
+
+ border-radius:5px
+
+}
+
+.car:after{
+
+ content:"";
+
+ position:absolute;
+
+ left:5px;bottom:8px;
+
+ width:30px;height:8px;
+
+ background:#222;
+
+ border-radius:5px
+
+}
+
+.red{background:#d62828}
+
+.yellow{background:#e6b800}
+
+.green{background:#16803c}
+
+/* HUD */
+
+#hud{
+
+ position:absolute;
+
+ top:12px;left:12px;
+
+ z-index:50;
+
+ background:#000c;
+
+ padding:10px 15px;
+
+ border-radius:10px;
+
+ text-align:left;
+
+ font-weight:bold
+
+}
+
+#wanted{color:#ffd700}
+
+/* CONTROLS */
+
+#controls{
+
+ position:absolute;
+
+ bottom:15px;
+
+ left:50%;
+
+ transform:translateX(-50%);
+
+ z-index:60;
+
+ display:grid;
+
+ grid-template-columns:65px 65px 65px;
+
+ gap:8px
+
+}
+
+.ctrl{
+
+ width:65px;height:55px;
+
+ border:0;border-radius:12px;
+
+ background:#000b;
+
+ color:white;
+
+ font-size:24px;
+
+ border:1px solid #777
+
+}
+
+.up{grid-column:2}
+
+.left{grid-column:1}
+
+.down{grid-column:2}
+
+.right{grid-column:3}
+
+/* MISSION */
+
+#mission{
+
+ position:absolute;
+
+ top:12px;right:12px;
+
+ z-index:50;
+
+ background:#000c;
+
+ padding:10px 14px;
+
+ border-radius:10px;
+
+ color:#fff
+
+}
+
+#start{
+
+ margin:6px;
+
+ padding:10px 25px;
+
+ border:0;border-radius:20px;
+
+ background:#e63946;
+
+ color:white;font-weight:bold
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏙️ GTA MINI CITY</h1>
+
+<p>Explore the city • Complete the mission</p>
+
+<button id="start">START GAME</button>
+
+<div id="game">
+
+<div id="city"></div>
+
+<div class="building b1">
+
+ <div class="window" style="top:15px;left:15px"></div>
+
+ <div class="window" style="top:15px;right:15px"></div>
+
+ <div class="window" style="bottom:15px;left:15px"></div>
+
+ <div class="window" style="bottom:15px;right:15px"></div>
+
+</div>
+
+<div class="building b2">
+
+ <div class="window" style="top:15px;left:15px"></div>
+
+ <div class="window" style="top:15px;right:15px"></div>
+
+</div>
+
+<div class="building b3"></div>
+
+<div class="building b4"></div>
+
+<div id="hud">
+
+💰 Money: <span id="money">0</span><br>
+
+⭐ Wanted: <span id="wanted">☆☆☆☆☆</span>
+
+</div>
+
+<div id="mission">
+
+🎯 Mission: Reach the checkpoint
+
+</div>
+
+<div id="player"></div>
+
+<div class="car red" style="left:40%;top:25%"></div>
+
+<div class="car yellow" style="left:65%;top:52%"></div>
+
+<div class="car green" style="left:25%;top:70%"></div>
+
+<div id="controls">
+
+<button class="ctrl up" id="up">⬆️</button>
+
+<button class="ctrl left" id="left">⬅️</button>
+
+<button class="ctrl down" id="down">⬇️</button>
+
+<button class="ctrl right" id="right">➡️</button>
+
+</div>
+
+</div>
+
+<script>
+
+const player=document.getElementById("player");
+
+const game=document.getElementById("game");
+
+const moneyBox=document.getElementById("money");
+
+let x=50,y=50;
+
+let money=0;
+
+let playing=false;
+
+let keys={};
+
+function startGame(){
+
+ playing=true;
+
+ x=50;
+
+ y=50;
+
+ money=0;
+
+ update();
+
+}
+
+function update(){
+
+ if(!playing)return;
+
+ let speed=.7;
+
+ if(keys.ArrowUp)y-=speed;
+
+ if(keys.ArrowDown)y+=speed;
+
+ if(keys.ArrowLeft)x-=speed;
+
+ if(keys.ArrowRight)x+=speed;
+
+ x=Math.max(3,Math.min(97,x));
+
+ y=Math.max(5,Math.min(94,y));
+
+ player.style.left=x+"%";
+
+ player.style.top=y+"%";
+
+ requestAnimationFrame(update);
+
+}
+
+document.addEventListener("keydown",e=>{
+
+ keys[e.key]=true;
+
+});
+
+document.addEventListener("keyup",e=>{
+
+ keys[e.key]=false;
+
+});
+
+function press(key){
+
+ keys[key]=true;
+
+}
+
+function release(key){
+
+ keys[key]=false;
+
+}
+
+[
+
+["up","ArrowUp"],
+
+["down","ArrowDown"],
+
+["left","ArrowLeft"],
+
+["right","ArrowRight"]
+
+].forEach(([id,key])=>{
+
+ const b=document.getElementById(id);
+
+ b.addEventListener("touchstart",e=>{
+
+   e.preventDefault();
+
+   press(key);
+
+ });
+
+ b.addEventListener("touchend",e=>{
+
+   e.preventDefault();
+
+   release(key);
+
+ });
+
+ b.addEventListener("mousedown",()=>press(key));
+
+ b.addEventListener("mouseup",()=>release(key));
+
+});
+
+document.getElementById("start").onclick=startGame;
+
+</script>
+
+</body>
+
+</html>
