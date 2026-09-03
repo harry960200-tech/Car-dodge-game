@@ -519,7 +519,37 @@ function release(key){
 });
 
 document.getElementById("start").onclick=startGame;
+// DRIVEABLE CAR
+let driving = false;
+let carX = 40;
+let carY = 25;
 
+const driveCar = document.querySelector(".car.red");
+
+driveCar.addEventListener("click", () => {
+    driving = !driving;
+    driveCar.style.zIndex = driving ? "30" : "10";
+});
+
+function moveCar(){
+    if(!driving) return;
+
+    if(keys.ArrowUp) carY -= 0.6;
+    if(keys.ArrowDown) carY += 0.6;
+    if(keys.ArrowLeft) carX -= 0.6;
+    if(keys.ArrowRight) carX += 0.6;
+
+    carX = Math.max(5, Math.min(90, carX));
+    carY = Math.max(5, Math.min(88, carY));
+
+    driveCar.style.left = carX + "%";
+    driveCar.style.top = carY + "%";
+
+    requestAnimationFrame(moveCar);
+}
+
+moveCar();
+ 
 </script>
 
 </body>
