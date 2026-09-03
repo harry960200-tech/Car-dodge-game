@@ -2,378 +2,373 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GTA Mini Open World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTA Mini - Farming Edition</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  overflow:hidden;
+  background:#111;
+  font-family:Arial,sans-serif;
+}
+
+#game{
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  position:relative;
+  background:#222;
+}
+
+#world{
+  position:absolute;
+  width:2400px;
+  height:1800px;
+  background:#65a84f;
+  transition:transform .08s linear;
+}
+
+/* ROADS */
+.road{
+  position:absolute;
+  background:#333;
+}
+
+.h1{left:0;top:300px;width:2400px;height:150px;}
+.h2{left:0;top:850px;width:2400px;height:150px;}
+.h3{left:0;top:1400px;width:2400px;height:150px;}
+
+.v1{left:350px;top:0;width:150px;height:1800px;}
+.v2{left:1100px;top:0;width:150px;height:1800px;}
+.v3{left:1850px;top:0;width:150px;height:1800px;}
+
+.road:after{
+  content:"";
+  position:absolute;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent 0 35px,
+    #ddd 35px 65px,
+    transparent 65px 100px
+  );
+}
+
+.h1:after,
+.h2:after,
+.h3:after{
+  width:100%;
+  height:5px;
+  top:72px;
+  left:0;
+}
+
+.v1:after,
+.v2:after,
+.v3:after{
+  width:5px;
+  height:100%;
+  left:72px;
+  top:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0 35px,
+    #ddd 35px 65px,
+    transparent 65px 100px
+  );
+}
+
+/* BUILDINGS */
+.building{
+  position:absolute;
+  width:230px;
+  height:180px;
+  background:#b94d3c;
+  border:8px solid #703027;
+  border-radius:12px;
+  box-shadow:8px 8px 0 #263b26;
+}
+
+.building:before{
+  content:"🏢";
+  position:absolute;
+  font-size:65px;
+  left:75px;
+  top:45px;
+}
+
+.b1{left:70px;top:60px;}
+.b2{left:620px;top:60px;}
+.b3{left:1380px;top:60px;}
+.b4{left:2050px;top:60px;}
+
+.b5{left:620px;top:560px;}
+.b6{left:1380px;top:560px;}
+.b7{left:2050px;top:560px;}
+
+.b8{left:70px;top:1110px;}
+.b9{left:620px;top:1110px;}
+.b10{left:1380px;top:1110px;}
+.b11{left:2050px;top:1110px;}
+
+.b12{left:620px;top:1600px;}
+
+/* PARKS */
+.park{
+  position:absolute;
+  width:260px;
+  height:210px;
+  background:#3e8d43;
+  border:8px solid #28632e;
+  border-radius:25px;
+}
+
+.p1{left:155px;top:570px;}
+.p2{left:1570px;top:570px;}
+
+.tree{
+  position:absolute;
+  font-size:42px;
+}
+
+/* SHOPS */
+.shop{
+  position:absolute;
+  width:190px;
+  height:120px;
+  background:#f0a42b;
+  border:7px solid #9b5b12;
+  border-radius:15px;
+  text-align:center;
+  padding-top:35px;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.shop1{left:500px;top:1100px;}
+.shop2{left:1250px;top:1100px;}
+.shop3{left:1970px;top:850px;}
+.shop4{left:60px;top:850px;}
+
+/* PETROL */
+.petrol{
+  position:absolute;
+  left:1550px;
+  top:1120px;
+  width:240px;
+  height:170px;
+  background:#e8e8e8;
+  border:8px solid #555;
+  border-radius:15px;
+  text-align:center;
+  padding-top:55px;
+  font-size:25px;
+  font-weight:bold;
+}
+
+/* CARS */
+.car{
+  position:absolute;
+  font-size:55px;
+}
+
+.car1{left:550px;top:340px;}
+.car2{left:800px;top:900px;}
+.car3{left:1450px;top:900px;}
+.car4{left:1700px;top:340px;}
+.car5{left:2000px;top:900px;}
+.car6{left:800px;top:1450px;}
+.car7{left:1450px;top:1450px;}
+.car8{left:2000px;top:1450px;}
+
 /* FARM */
 .farm{
   position:absolute;
-  left:150px;
-  top:120px;
-  width:650px;
-  height:500px;
+  left:70px;
+  top:1550px;
+  width:480px;
+  height:220px;
   background:#6b4b2a;
   border:8px solid #3b2918;
   border-radius:20px;
-  padding:25px;
-  box-sizing:border-box;
+  padding:15px;
 }
 
 .farm-title{
   color:white;
-  font-size:28px;
+  font-size:22px;
   font-weight:bold;
   text-align:center;
-  margin-bottom:15px;
+  margin-bottom:10px;
 }
 
 .field{
   position:absolute;
   background:#8b5a2b;
-  border:5px solid #4d321b;
-  border-radius:12px;
-}
-
-.field::after{
-  content:"🌱 🌱 🌱 🌱 🌱";
-  position:absolute;
-  font-size:30px;
-  letter-spacing:18px;
-  top:25px;
-  left:20px;
+  border:4px solid #4d321b;
+  border-radius:10px;
 }
 
 .field1{
-  width:260px;
-  height:150px;
-  left:25px;
-  top:80px;
+  width:180px;
+  height:70px;
+  left:15px;
+  top:55px;
 }
 
 .field2{
-  width:260px;
-  height:150px;
-  right:25px;
-  top:80px;
+  width:180px;
+  height:70px;
+  left:210px;
+  top:55px;
 }
 
 .field3{
-  width:550px;
-  height:150px;
-  left:25px;
-  bottom:25px;
+  width:375px;
+  height:70px;
+  left:15px;
+  bottom:12px;
+}
+
+.field::after{
+  content:"🌱 🌱 🌱";
+  position:absolute;
+  font-size:20px;
+  left:20px;
+  top:18px;
 }
 
 .barn{
   position:absolute;
-  right:275px;
-  bottom:185px;
-  font-size:70px;
+  right:20px;
+  bottom:145px;
+  font-size:45px;
 }
 
 .tractor{
   position:absolute;
-  right:55px;
-  bottom:185px;
-  font-size:65px;
+  right:20px;
+  bottom:5px;
+  font-size:45px;
 }
-  
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:Arial,sans-serif;
-background:#111;
-color:white
-}
-
-#game{
-position:relative;
-width:100vw;
-height:100vh;
-overflow:hidden;
-background:#4d8b43
-}
-
-#world{
-position:absolute;
-width:2400px;
-height:1800px;
-left:0;
-top:0;
-background:#4f9145
-}
-
-/* ROADS */
-.road{
-position:absolute;
-background:#343434;
-z-index:1
-}
-
-.h1{left:0;top:430px;width:2400px;height:150px}
-.h2{left:0;top:1050px;width:2400px;height:150px}
-.h3{left:0;top:1550px;width:2400px;height:130px}
-
-.v1{left:430px;top:0;width:150px;height:1800px}
-.v2{left:1100px;top:0;width:150px;height:1800px}
-.v3{left:1750px;top:0;width:150px;height:1800px}
-
-/* ROAD MARKINGS */
-.mark{
-position:absolute;
-z-index:2;
-background:repeating-linear-gradient(
-90deg,
-#f5d76e 0 45px,
-transparent 45px 85px
-);
-height:5px;
-width:100%
-}
-
-.m1{top:502px}
-.m2{top:1122px}
-.m3{top:1612px}
-
-.vmark{
-position:absolute;
-z-index:2;
-width:5px;
-height:100%;
-background:repeating-linear-gradient(
-0deg,
-#f5d76e 0 45px,
-transparent 45px 85px
-)
-}
-
-.vm1{left:502px}
-.vm2{left:1172px}
-.vm3{left:1822px}
-
-/* BUILDINGS */
-.building{
-position:absolute;
-z-index:5;
-border:5px solid #292929;
-border-radius:12px;
-box-shadow:7px 9px 14px #0008;
-overflow:hidden
-}
-
-.building:after{
-content:"";
-position:absolute;
-inset:15px;
-background:
-repeating-linear-gradient(
-90deg,
-#ffd85c 0 25px,
-transparent 25px 55px
-),
-repeating-linear-gradient(
-0deg,
-transparent 0 30px,
-#ffd85c 30px 43px
-);
-opacity:.45
-}
-
-.b1{left:70px;top:80px;width:270px;height:260px;background:#765b4b}
-.b2{left:650px;top:70px;width:330px;height:280px;background:#596c82}
-.b3{left:1320px;top:80px;width:350px;height:250px;background:#786453}
-.b4{left:1950px;top:70px;width:330px;height:280px;background:#625c78}
-
-.b5{left:60px;top:700px;width:280px;height:260px;background:#68765b}
-.b6{left:650px;top:690px;width:330px;height:270px;background:#80624e}
-.b7{left:1320px;top:700px;width:350px;height:250px;background:#5d6f82}
-.b8{left:1960px;top:690px;width:300px;height:270px;background:#796252}
-
-.b9{left:60px;top:1300px;width:280px;height:190px;background:#75634f}
-.b10{left:650px;top:1300px;width:330px;height:190px;background:#5e7181}
-.b11{left:1320px;top:1300px;width:350px;height:190px;background:#765b70}
-.b12{left:1960px;top:1300px;width:300px;height:190px;background:#68735b}
-
-/* PARK */
-.park{
-position:absolute;
-z-index:3;
-background:#3b8c43;
-border:6px solid #28662d;
-border-radius:18px
-}
-
-.p1{left:1320px;top:350px;width:350px;height:350px}
-.p2{left:650px;top:1230px;width:330px;height:220px}
-
-/* TREES */
-.tree{
-position:absolute;
-width:42px;
-height:42px;
-background:#14532d;
-border-radius:50%;
-border:4px solid #0b3b20;
-box-shadow:0 9px 0 #704214
-}
-
-/* SHOPS */
-.shop{
-position:absolute;
-z-index:8;
-padding:12px 18px;
-background:#d62828;
-border:4px solid #222;
-border-radius:8px;
-font-weight:bold;
-box-shadow:4px 5px 8px #0009
-}
-
-.shop1{left:600px;top:390px}
-.shop2{left:1900px;top:390px;background:#1479a6}
-.shop3{left:600px;top:1220px;background:#f77f00}
-.shop4{left:1880px;top:1220px;background:#8e44ad}
-
-/* GAS STATION */
-.gas{
-position:absolute;
-z-index:8;
-left:1030px;
-top:650px;
-width:130px;
-height:120px;
-background:#eee;
-border:5px solid #222;
-border-radius:10px;
-color:#111;
-font-weight:bold;
-padding-top:15px
-}
-
-.gas:after{
-content:"⛽";
-display:block;
-font-size:38px;
-margin-top:8px
-}
-
-/* CARS */
-.car{
-position:absolute;
-width:48px;
-height:76px;
-border-radius:12px;
-border:3px solid #181818;
-z-index:12;
-box-shadow:4px 5px 9px #0009
-}
-
-.car:before{
-content:"";
-position:absolute;
-left:7px;
-top:12px;
-width:28px;
-height:22px;
-background:linear-gradient(135deg,#dff8ff,#6ca8c0);
-border:2px solid #333;
-border-radius:6px
-}
-
-.car:after{
-content:"";
-position:absolute;
-left:6px;
-bottom:8px;
-width:32px;
-height:9px;
-background:#171717;
-border-radius:5px
-}
-
-.red{background:#d62828}
-.blue{background:#1769aa}
-.yellow{background:#d9a500}
-.green{background:#16803c}
-.black{background:#242424}
 
 /* PLAYER */
 #player{
-position:absolute;
-width:32px;
-height:45px;
-background:#168cff;
-border:3px solid white;
-border-radius:9px;
-z-index:30;
-box-shadow:0 0 15px #168cff
-}
-
-#player:before{
-content:"";
-position:absolute;
-width:13px;
-height:13px;
-left:6px;
-top:-12px;
-background:#ffd7b0;
-border:2px solid #222;
-border-radius:50%
+  position:absolute;
+  width:55px;
+  height:65px;
+  font-size:48px;
+  z-index:20;
+  transform:translate(-50%,-50%);
 }
 
 /* HUD */
 #hud{
-position:fixed;
-top:15px;
-left:15px;
-z-index:100;
-background:#000d;
-padding:12px 16px;
-border-radius:12px;
-font-weight:bold;
-line-height:1.6
+  position:fixed;
+  top:15px;
+  left:15px;
+  z-index:100;
+  background:rgba(0,0,0,.75);
+  color:white;
+  padding:14px 18px;
+  border-radius:14px;
+  font-size:17px;
+  line-height:1.6;
 }
 
 #mission{
-position:fixed;
-top:15px;
-right:15px;
-z-index:100;
-background:#000d;
-padding:12px 16px;
-border-radius:12px
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:100;
+  background:rgba(0,0,0,.75);
+  color:white;
+  padding:12px 18px;
+  border-radius:14px;
 }
 
-/* CONTROLS */
+/* FARM BUTTONS */
+#farmControls{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:200;
+  display:flex;
+  gap:10px;
+}
+
+.farmBtn{
+  border:0;
+  padding:14px 18px;
+  border-radius:12px;
+  font-size:17px;
+  font-weight:bold;
+  color:white;
+  background:#249b45;
+  box-shadow:0 4px 10px #0006;
+}
+
+#waterBtn{
+  background:#2186d0;
+}
+
+#harvestBtn{
+  background:#c68a18;
+}
+
+/* MOBILE CONTROLS */
 #controls{
-position:fixed;
-bottom:18px;
-left:50%;
-transform:translateX(-50%);
-z-index:100;
-display:grid;
-grid-template-columns:65px 65px 65px;
-gap:7px
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  z-index:200;
+  width:150px;
+  height:150px;
 }
 
 .ctrl{
-width:65px;
-height:55px;
-border:2px solid #ffffff55;
-border-radius:14px;
-background:#000b;
-color:white;
-font-size:24px
+  position:absolute;
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:12px;
+  background:#ffffffcc;
+  font-size:24px;
+  font-weight:bold;
 }
 
-.up{grid-column:2}
-.left{grid-column:1}
-.down{grid-column:2}
-.right{grid-column:3}
+.up{left:51px;top:0;}
+.down{left:51px;bottom:0;}
+.left{left:0;top:51px;}
+.right{right:0;top:51px;}
+
+@media(max-width:600px){
+  #hud{
+    font-size:13px;
+    padding:8px 10px;
+  }
+
+  #mission{
+    font-size:13px;
+    padding:8px 10px;
+  }
+
+  #farmControls{
+    right:10px;
+    bottom:10px;
+    flex-direction:column;
+  }
+
+  .farmBtn{
+    padding:10px 14px;
+    font-size:14px;
+  }
+}
 </style>
 </head>
 
@@ -381,196 +376,348 @@ font-size:24px
 
 <div id="game">
 
-<div id="world">
-<!-- FARM AREA -->
-<div class="farm">
-  <div class="farm-title">🌾 FARM</div>
+  <div id="world">
 
-  <div class="field field1"></div>
-  <div class="field field2"></div>
-  <div class="field field3"></div>
+    <!-- ROADS -->
+    <div class="road h1"></div>
+    <div class="road h2"></div>
+    <div class="road h3"></div>
 
-  <div class="barn">🏠</div>
-  <div class="tractor">🚜</div>
-</div>
-  
-<!-- ROADS -->
-<div class="road h1"></div>
-<div class="road h2"></div>
-<div class="road h3"></div>
+    <div class="road v1"></div>
+    <div class="road v2"></div>
+    <div class="road v3"></div>
 
-<div class="road v1"></div>
-<div class="road v2"></div>
-<div class="road v3"></div>
+    <!-- BUILDINGS -->
+    <div class="building b1"></div>
+    <div class="building b2"></div>
+    <div class="building b3"></div>
+    <div class="building b4"></div>
+    <div class="building b5"></div>
+    <div class="building b6"></div>
+    <div class="building b7"></div>
+    <div class="building b8"></div>
+    <div class="building b9"></div>
+    <div class="building b10"></div>
+    <div class="building b11"></div>
+    <div class="building b12"></div>
 
-<div class="mark m1"></div>
-<div class="mark m2"></div>
-<div class="mark m3"></div>
+    <!-- PARKS -->
+    <div class="park p1">
+      <span class="tree" style="left:30px;top:30px">🌳</span>
+      <span class="tree" style="left:150px;top:20px">🌳</span>
+      <span class="tree" style="left:90px;top:110px">🌳</span>
+    </div>
 
-<div class="vmark vm1"></div>
-<div class="vmark vm2"></div>
-<div class="vmark vm3"></div>
+    <div class="park p2">
+      <span class="tree" style="left:30px;top:30px">🌳</span>
+      <span class="tree" style="left:150px;top:20px">🌳</span>
+      <span class="tree" style="left:90px;top:110px">🌳</span>
+    </div>
 
-<!-- BUILDINGS -->
-<div class="building b1"></div>
-<div class="building b2"></div>
-<div class="building b3"></div>
-<div class="building b4"></div>
+    <!-- SHOPS -->
+    <div class="shop shop1">🏪 SHOP</div>
+    <div class="shop shop2">🍔 FOOD</div>
+    <div class="shop shop3">🔧 GARAGE</div>
+    <div class="shop shop4">🏥 HOSPITAL</div>
 
-<div class="building b5"></div>
-<div class="building b6"></div>
-<div class="building b7"></div>
-<div class="building b8"></div>
+    <!-- PETROL -->
+    <div class="petrol">⛽ PETROL</div>
 
-<div class="building b9"></div>
-<div class="building b10"></div>
-<div class="building b11"></div>
-<div class="building b12"></div>
+    <!-- CARS -->
+    <div class="car car1">🚗</div>
+    <div class="car car2">🚕</div>
+    <div class="car car3">🚙</div>
+    <div class="car car4">🚓</div>
+    <div class="car car5">🚗</div>
+    <div class="car car6">🚕</div>
+    <div class="car car7">🚙</div>
+    <div class="car car8">🚓</div>
 
-<!-- PARKS -->
-<div class="park p1">
-<div class="tree" style="left:40px;top:40px"></div>
-<div class="tree" style="right:40px;top:70px"></div>
-<div class="tree" style="left:100px;bottom:50px"></div>
-<div class="tree" style="right:80px;bottom:40px"></div>
-</div>
+    <!-- FARM -->
+    <div class="farm">
 
-<div class="park p2">
-<div class="tree" style="left:40px;top:35px"></div>
-<div class="tree" style="right:50px;top:40px"></div>
-<div class="tree" style="left:120px;bottom:35px"></div>
-</div>
+      <div class="farm-title" id="farmTitle">
+        🌾 FARM | Seeds: 10 | Crops: 0
+      </div>
 
-<!-- SHOPS -->
-<div class="shop shop1">🏪 SHOP</div>
-<div class="shop shop2">🏥 HOSPITAL</div>
-<div class="shop shop3">🍔 BURGER</div>
-<div class="shop shop4">🎮 ARCADE</div>
+      <div class="field field1"></div>
+      <div class="field field2"></div>
+      <div class="field field3"></div>
 
-<!-- GAS -->
-<div class="gas">PETROL</div>
+      <div class="barn">🏠</div>
+      <div class="tractor">🚜</div>
 
-<!-- CARS -->
-<div class="car red" style="left:300px;top:465px"></div>
-<div class="car blue" style="left:800px;top:1080px"></div>
-<div class="car yellow" style="left:1125px;top:300px"></div>
-<div class="car green" style="left:1750px;top:470px"></div>
-<div class="car black" style="left:1800px;top:1100px"></div>
-<div class="car red" style="left:450px;top:1500px"></div>
-<div class="car blue" style="left:1200px;top:1500px"></div>
-<div class="car yellow" style="left:1800px;top:1500px"></div>
+    </div>
 
-<!-- PLAYER -->
-<div id="player"></div>
+    <!-- PLAYER -->
+    <div id="player">🧑</div>
+
+  </div>
 
 </div>
 
+<!-- HUD -->
 <div id="hud">
-💰 Money: <span id="money">0</span><br>
-⭐ Wanted: ☆☆☆☆☆
+  💰 Money: ₹<span id="money">100</span><br>
+  🌱 Seeds: <span id="seeds">10</span><br>
+  🌾 Crops: <span id="crops">0</span>
 </div>
 
 <div id="mission">
-🎯 Explore the city
+  🎯 Mission: Explore the city
 </div>
 
-<div id="controls">
-<button class="ctrl up" id="up">⬆️</button>
-<button class="ctrl left" id="left">⬅️</button>
-<button class="ctrl down" id="down">⬇️</button>
-<button class="ctrl right" id="right">➡️</button>
+<!-- FARM BUTTONS -->
+<div id="farmControls">
+  <button class="farmBtn" onclick="plantCrop()">🌱 PLANT</button>
+  <button class="farmBtn" id="waterBtn" onclick="waterCrop()">💧 WATER</button>
+  <button class="farmBtn" id="harvestBtn" onclick="harvestCrop()">🌾 HARVEST</button>
 </div>
+
+<!-- MOBILE CONTROLS -->
+<div id="controls">
+
+  <button class="ctrl up" onclick="move(0,-1)">⬆️</button>
+  <button class="ctrl down" onclick="move(0,1)">⬇️</button>
+  <button class="ctrl left" onclick="move(-1,0)">⬅️</button>
+  <button class="ctrl right" onclick="move(1,0)">➡️</button>
 
 </div>
 
 <script>
 
-const world=document.getElementById("world");
-const player=document.getElementById("player");
+/* =========================
+   PLAYER MOVEMENT
+========================= */
 
-let px=1200;
-let py=850;
+const player = document.getElementById("player");
+const world = document.getElementById("world");
 
-let keys={};
+let playerX = 1200;
+let playerY = 750;
 
-function draw(){
+const speed = 7;
 
-player.style.left=px+"px";
-player.style.top=py+"px";
+let keys = {};
 
-let camX=px-window.innerWidth/2;
-let camY=py-window.innerHeight/2;
+document.addEventListener("keydown", function(e){
+  keys[e.key] = true;
+});
 
-camX=Math.max(0,Math.min(2400-window.innerWidth,camX));
-camY=Math.max(0,Math.min(1800-window.innerHeight,camY));
+document.addEventListener("keyup", function(e){
+  keys[e.key] = false;
+});
 
-world.style.transform=
-"translate("+(-camX)+"px,"+(-camY)+"px)";
+function move(dx,dy){
+  playerX += dx * speed * 4;
+  playerY += dy * speed * 4;
 
+  limitPlayer();
+  updateGame();
 }
 
-function loop(){
-
-let speed=5;
-
-if(keys.ArrowUp)py-=speed;
-if(keys.ArrowDown)py+=speed;
-if(keys.ArrowLeft)px-=speed;
-if(keys.ArrowRight)px+=speed;
-
-px=Math.max(20,Math.min(2370,px));
-py=Math.max(20,Math.min(1770,py));
-
-draw();
-
-requestAnimationFrame(loop);
+function limitPlayer(){
+  playerX = Math.max(30, Math.min(2370, playerX));
+  playerY = Math.max(30, Math.min(1770, playerY));
 }
 
-/* KEYBOARD */
-document.addEventListener("keydown",e=>{
-keys[e.key]=true;
-});
+function updateGame(){
 
-document.addEventListener("keyup",e=>{
-keys[e.key]=false;
-});
+  player.style.left = playerX + "px";
+  player.style.top = playerY + "px";
 
-/* MOBILE */
-function button(id,key){
+  let cameraX = window.innerWidth / 2 - playerX;
+  let cameraY = window.innerHeight / 2 - playerY;
 
-const b=document.getElementById(id);
+  cameraX = Math.min(0, Math.max(window.innerWidth - 2400, cameraX));
+  cameraY = Math.min(0, Math.max(window.innerHeight - 1800, cameraY));
 
-b.addEventListener("touchstart",e=>{
-e.preventDefault();
-keys[key]=true;
-});
-
-b.addEventListener("touchend",e=>{
-e.preventDefault();
-keys[key]=false;
-});
-
-b.addEventListener("mousedown",()=>{
-keys[key]=true;
-});
-
-b.addEventListener("mouseup",()=>{
-keys[key]=false;
-});
-
-b.addEventListener("mouseleave",()=>{
-keys[key]=false;
-});
-
+  world.style.transform =
+    `translate(${cameraX}px,${cameraY}px)`;
 }
 
-button("up","ArrowUp");
-button("down","ArrowDown");
-button("left","ArrowLeft");
-button("right","ArrowRight");
+function gameLoop(){
 
-draw();
-loop();
+  if(keys["ArrowUp"] || keys["w"]){
+    playerY -= speed;
+  }
+
+  if(keys["ArrowDown"] || keys["s"]){
+    playerY += speed;
+  }
+
+  if(keys["ArrowLeft"] || keys["a"]){
+    playerX -= speed;
+  }
+
+  if(keys["ArrowRight"] || keys["d"]){
+    playerX += speed;
+  }
+
+  limitPlayer();
+  updateGame();
+
+  requestAnimationFrame(gameLoop);
+}
+
+updateGame();
+gameLoop();
+
+
+/* =========================
+   FARMING SYSTEM
+========================= */
+
+let seeds = 10;
+let crops = 0;
+let watered = false;
+let money = 100;
+
+const seedDisplay = document.getElementById("seeds");
+const cropDisplay = document.getElementById("crops");
+const moneyDisplay = document.getElementById("money");
+const farmTitle = document.getElementById("farmTitle");
+
+function updateFarm(){
+
+  seedDisplay.innerText = seeds;
+  cropDisplay.innerText = crops;
+  moneyDisplay.innerText = money;
+
+  farmTitle.innerText =
+    `🌾 FARM | Seeds: ${seeds} | Crops: ${crops}`;
+}
+
+
+/* PLANT */
+
+function plantCrop(){
+
+  if(seeds <= 0){
+    alert("❌ Seeds khatam ho gaye!");
+    return;
+  }
+
+  seeds--;
+  crops++;
+
+  watered = false;
+
+  document.getElementById("mission").innerText =
+    "🌱 Crop planted! Now water it 💧";
+
+  updateFarm();
+}
+
+
+/* WATER */
+
+function waterCrop(){
+
+  if(crops <= 0){
+    alert("🌱 Pehla crop plant karo!");
+    return;
+  }
+
+  watered = true;
+
+  document.getElementById("mission").innerText =
+    "💧 Crop watered! Harvest it 🌾";
+
+  alert("💧 Crop nu paani mil gaya!");
+}
+
+
+/* HARVEST */
+
+function harvestCrop(){
+
+  if(crops <= 0){
+    alert("❌ Harvest karan layi crop nahi hai!");
+    return;
+  }
+
+  if(!watered){
+    alert("💧 Pehla crop nu water karo!");
+    return;
+  }
+
+  crops--;
+
+  let reward = 25;
+
+  money += reward;
+
+  document.getElementById("mission").innerText =
+    `💰 Crop sold! +₹${reward}`;
+
+  alert(`🌾 Harvest successful!\n💰 You earned ₹${reward}`);
+
+  updateFarm();
+}
+
+
+/* =========================
+   TOUCH HOLD CONTROLS
+========================= */
+
+let interval;
+
+function startMove(dx,dy){
+
+  clearInterval(interval);
+
+  interval = setInterval(function(){
+
+    playerX += dx * speed;
+    playerY += dy * speed;
+
+    limitPlayer();
+    updateGame();
+
+  },30);
+}
+
+function stopMove(){
+  clearInterval(interval);
+}
+
+
+/* DESKTOP + MOBILE */
+
+document.querySelector(".up").addEventListener(
+  "touchstart",
+  ()=>startMove(0,-1)
+);
+
+document.querySelector(".down").addEventListener(
+  "touchstart",
+  ()=>startMove(0,1)
+);
+
+document.querySelector(".left").addEventListener(
+  "touchstart",
+  ()=>startMove(-1,0)
+);
+
+document.querySelector(".right").addEventListener(
+  "touchstart",
+  ()=>startMove(1,0)
+);
+
+document.querySelectorAll(".ctrl").forEach(btn => {
+
+  btn.addEventListener("touchend",stopMove);
+  btn.addEventListener("mouseup",stopMove);
+
+});
+
+
+/* =========================
+   RESIZE
+========================= */
+
+window.addEventListener("resize",updateGame);
 
 </script>
 
